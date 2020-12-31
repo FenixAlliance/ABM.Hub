@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <Company>Fenix Alliance Inc.</Company>
+    <Authors>Fenix Alliance Group</Authors>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <TargetFramework>net5.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <PackageTags>Alliance Business Suite, FenixAlliance, DTOs, ABS</PackageTags>
+    <Copyright>© 2009 - 2019 Fenix Alliance Group. All rights reserved.</Copyright>
+    <Description>Data Transfer Objects for the Alliance Business Suite API Version 2.</Description>
+    <PackageReleaseNotes>Adds new Cart DTO. Designed for REST query extension and graphql API Compatibility.</PackageReleaseNotes>
+    <PackageProjectUrl>https://fenixalliance.com.co/api/v2/documentation/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/FenixAlliance/ABS.Models.DTOs</RepositoryUrl>
+    <PackageIcon>Icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FenixAlliance.ABM.Data\FenixAlliance.ABM.Data.csproj" />
+    <ProjectReference Include="..\FenixAlliance.ABM.Models\FenixAlliance.ABM.Models.csproj" />
+    <ProjectReference Include="..\FenixAlliance.ABM.Data.MSSQL\FenixAlliance.ABM.Data.MSSQL.csproj" />
+    <ProjectReference Include="..\FenixAlliance.ABM.Data.MySQL\FenixAlliance.ABM.Data.MySQL.csproj" />
+    <ProjectReference Include="..\FenixAlliance.ABM.Models.DTOs\FenixAlliance.ABM.Models.DTOs.csproj" />
+    <ProjectReference Include="..\FenixAlliance.ABM.Data.Access\FenixAlliance.ABM.Data.Access.csproj" />
+    <ProjectReference Include="..\FenixAlliance.ABM.Models.Mappers\FenixAlliance.ABM.Models.Mappers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
