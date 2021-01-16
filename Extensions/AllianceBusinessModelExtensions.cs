@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FenixAlliance.ABM.Data;
-using FenixAlliance.ACL.Configuration.Types;
+using FenixAlliance.ACL.Configuration.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +11,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
 {
     public static class AllianceBusinessModelExtensions
     {
-        public static void AddAllianceBusinessModelServices(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, SuiteOptions Options)
+        public static void AddAllianceBusinessModelServices(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options)
         {
                 switch (Options.ABM.Provider)
                 {
@@ -35,7 +35,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
         }
 
 
-        public static void AddMySQL(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, SuiteOptions Options, bool Development)
+        public static void AddMySQL(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options, bool Development)
         {
             var Provider = Options.ABM.Providers.Last(c =>
                 c.Name == "MSSQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
@@ -51,7 +51,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
         }
 
         public static void AddMSSQL(this IServiceCollection services,
-            IConfiguration Configuration, IHostEnvironment Environment, SuiteOptions Options, bool Development)
+            IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options, bool Development)
         {
             var Provider = Options.ABM.Providers.Last(c =>
                 c.Name == "MSSQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
