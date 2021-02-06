@@ -16,17 +16,17 @@ namespace FenixAlliance.ABM.Hub.Extensions
                 switch (Options.ABM.Provider)
                 {
                     case "MSSQL":
-                        // Use Production MSSQL DB
+                        // Use MSSQL DB
                         services.AddMSSQL(Configuration, Environment, Options, Environment.IsDevelopment());
                         break;
 
                     case "MySQL":
-                        // Use Production MySQL DB
+                        // Use MySQL DB
                         services.AddMySQL(Configuration, Environment, Options, Environment.IsDevelopment());
                         break;
 
                     default:
-                        // Use Production MySQL DB
+                        // Use MySQL DB
                         services.AddMySQL(Configuration, Environment, Options, Environment.IsDevelopment());
                         break;
                 }
