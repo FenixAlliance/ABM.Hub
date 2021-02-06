@@ -31,6 +31,8 @@ namespace FenixAlliance.ABM.Hub.Extensions
                         break;
                 }
 
+                if(Environment.IsDevelopment())
+                    services.AddDatabaseDeveloperPageExceptionFilter();
 
         }
 
