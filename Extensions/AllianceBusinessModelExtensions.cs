@@ -32,8 +32,9 @@ namespace FenixAlliance.ABM.Hub.Extensions
                 }
 
                 if(Environment.IsDevelopment())
-                    services.AddDatabaseDeveloperPageExceptionFilter();
-
+            {
+                services.AddDatabaseDeveloperPageExceptionFilter();
+            }
         }
 
 
