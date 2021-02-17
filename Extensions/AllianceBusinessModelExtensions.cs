@@ -13,25 +13,25 @@ namespace FenixAlliance.ABM.Hub.Extensions
     {
         public static void AddAllianceBusinessModelServices(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options)
         {
-                switch (Options.ABM.Provider)
-                {
-                    case "MSSQL":
-                        // Use MSSQL DB
-                        services.AddMSSQL(Configuration, Environment, Options, Environment.IsDevelopment());
-                        break;
+            switch (Options.ABM.Provider)
+            {
+                case "MSSQL":
+                    // Use MSSQL DB
+                    services.AddMSSQL(Configuration, Environment, Options, Environment.IsDevelopment());
+                    break;
 
-                    case "MySQL":
-                        // Use MySQL DB
-                        services.AddMySQL(Configuration, Environment, Options, Environment.IsDevelopment());
-                        break;
+                case "MySQL":
+                    // Use MySQL DB
+                    services.AddMySQL(Configuration, Environment, Options, Environment.IsDevelopment());
+                    break;
 
-                    default:
-                        // Use MySQL DB
-                        services.AddMySQL(Configuration, Environment, Options, Environment.IsDevelopment());
-                        break;
-                }
+                default:
+                    // Use MySQL DB
+                    services.AddMySQL(Configuration, Environment, Options, Environment.IsDevelopment());
+                    break;
+            }
 
-                if(Environment.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
@@ -44,7 +44,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
                 c.Name == "MySQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
 
             // Use MySQL DB
-            services.AddDbContextPool<ABMContext>(
+            services.AddDbContext<ABMContext>(
                 options =>
                 {
                     options.UseMySql(Provider.ConnectionString, ServerVersion.AutoDetect(Provider.ConnectionString),
@@ -58,7 +58,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
 
         public static void AddMSSQL(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options, bool Development)
         {
-            var Provider = Options.ABM.Providers.Last( c => c.Name == "MSSQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
+            var Provider = Options.ABM.Providers.Last(c => c.Name == "MSSQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
 
             // Use MSSQL DB
             services.AddDbContext<ABMContext>(options =>
