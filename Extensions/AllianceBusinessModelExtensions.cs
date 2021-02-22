@@ -2,6 +2,7 @@
 using System.Linq;
 using FenixAlliance.ABM.Data;
 using FenixAlliance.ACL.Configuration.Interfaces;
+using FenixAlliance.ACL.Configuration.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +12,12 @@ namespace FenixAlliance.ABM.Hub.Extensions
 {
     public static class AllianceBusinessModelExtensions
     {
-        public static void AddAllianceBusinessModelServices(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options)
+        public static void AddAllianceBusinessModelServices(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options = null)
         {
+
+            if (Options == null)
+                Options = SuiteOptions.DeserializeOptionsFromFileStatic();
+
             switch (Options.ABM.Provider)
             {
                 case "MSSQL":
