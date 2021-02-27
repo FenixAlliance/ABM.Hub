@@ -1,12 +1,12 @@
-﻿using System;
-using System.Linq;
-using FenixAlliance.ABM.Data;
+﻿using FenixAlliance.ABM.Data;
 using FenixAlliance.ACL.Configuration.Interfaces;
 using FenixAlliance.ACL.Configuration.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Linq;
 
 namespace FenixAlliance.ABM.Hub.Extensions
 {
