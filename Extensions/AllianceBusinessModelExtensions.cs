@@ -1,4 +1,5 @@
 ﻿using FenixAlliance.ABM.Data;
+using FenixAlliance.ABM.Data.Access.Context;
 using FenixAlliance.ACL.Configuration.Interfaces;
 using FenixAlliance.ACL.Configuration.Types;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
             if (Options == null)
                 Options = SuiteOptions.DeserializeOptionsFromFileStatic();
 
+
             switch (Options.ABM.Provider)
             {
                 case "MSSQL":
@@ -35,6 +37,16 @@ namespace FenixAlliance.ABM.Hub.Extensions
                     services.AddMySQL(Configuration, Environment, Options, Environment.IsDevelopment());
                     break;
             }
+            try
+            {
+                services.AddScoped<ABMContext>(p => p.GetRequiredService<IDbContextLocalFactory<ABMContext>>().CreateDbContext());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
 
             if (Environment.IsDevelopment())
             {
@@ -49,7 +61,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
                 c.Name == "MySQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
 
             // Use MySQL DB
-            services.AddDbContext<ABMContext>(
+            services.AddDbContextLocalFactory<ABMContext>(
                 options =>
                 {
                     options.UseMySql(Provider.ConnectionString, ServerVersion.AutoDetect(Provider.ConnectionString),
@@ -66,7 +78,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
             var Provider = Options.ABM.Providers.Last(c => c.Name == "MSSQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
 
             // Use MSSQL DB
-            services.AddDbContext<ABMContext>(options =>
+            services.AddDbContextLocalFactory<ABMContext>(options =>
             {
                 options.UseSqlServer(Provider.ConnectionString,
                         optionsBuilder =>
