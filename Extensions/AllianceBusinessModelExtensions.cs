@@ -1,5 +1,7 @@
 ﻿using FenixAlliance.ABM.Data;
+using FenixAlliance.ABM.Data.Access.Clients;
 using FenixAlliance.ABM.Data.Access.Context;
+using FenixAlliance.ABM.Data.Access.Helpers;
 using FenixAlliance.ACL.Configuration.Interfaces;
 using FenixAlliance.ACL.Configuration.Types;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +54,21 @@ namespace FenixAlliance.ABM.Hub.Extensions
             {
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
+
+
+            services.AddSingleton<BlobStorageDataAccessClient>();
+            services.AddSingleton<HolderDataAccessClient>();
+            services.AddSingleton<SocialDataAccessClient>();
+            services.AddSingleton<StockDataAccessClient>();
+            services.AddSingleton<TenantDataAccessClient>();
+            services.AddSingleton<StorageDataAccessClient>();
+
+            services.AddSingleton<HolderHelpers>();
+            services.AddSingleton<MongoHelpers>();
+            services.AddSingleton<StoreHelpers>();
+            services.AddSingleton<SocialHelpers>();
+            services.AddSingleton<TenantHelpers>();
+
         }
 
 
