@@ -2,6 +2,11 @@
 using FenixAlliance.ABM.Data.Access.Clients;
 using FenixAlliance.ABM.Data.Access.Context;
 using FenixAlliance.ABM.Data.Access.Helpers;
+using FenixAlliance.ABM.Data.Interfaces.Access;
+using FenixAlliance.ABM.Data.Interfaces.Helpers;
+using FenixAlliance.ABM.Data.Interfaces.Storage;
+using FenixAlliance.ABM.Data.Seeding.Helpers;
+using FenixAlliance.ABM.Data.Seeding.Models;
 using FenixAlliance.ACL.Configuration.Interfaces;
 using FenixAlliance.ACL.Configuration.Types;
 using Microsoft.EntityFrameworkCore;
@@ -55,27 +60,40 @@ namespace FenixAlliance.ABM.Hub.Extensions
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
+            services.AddTransient<IAccountUsersHelpers, HolderHelpers>();
+            services.AddTransient<IHolderDataAccess, HolderDataAccessClient>();
 
-            services.AddSingleton<BlobStorageDataAccessClient>();
-            services.AddSingleton<HolderDataAccessClient>();
-            services.AddSingleton<SocialDataAccessClient>();
-            services.AddSingleton<StockDataAccessClient>();
-            services.AddSingleton<TenantDataAccessClient>();
-            services.AddSingleton<StorageDataAccessClient>();
+            services.AddTransient<IBusinessDataAccess, TenantDataAccessClient>();
+            services.AddTransient<ITenantHelpers, TenantHelpers>();
 
-            services.AddSingleton<HolderHelpers>();
-            services.AddSingleton<MongoHelpers>();
-            services.AddSingleton<StoreHelpers>();
-            services.AddSingleton<SocialHelpers>();
-            services.AddSingleton<TenantHelpers>();
+            services.AddTransient<ISocialDataAccess, SocialDataAccessClient>();
+            services.AddTransient<ISocialHelpers, SocialHelpers>();
+
+            //services.AddTransient<IStockDataAccess, StockDataAccessClient>();
+            //services.AddTransient<IStoreHelpers, StoreHelpers>();
+
+
+            services.AddTransient<IStorageDataAccess, StorageDataAccessClient>();
+            services.AddTransient<IBlobStorageDataAccessClient, BlobStorageDataAccessClient>();
+            services.AddTransient<IMongoHelpers, MongoHelpers>(); 
+            services.AddTransient<ISeedingHelpers, SeedingHelpers>(); 
 
         }
 
 
         public static void AddMySQL(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options, bool Development)
         {
-            var Provider = Options.ABM.Providers.Last(c =>
-                c.Name == "MySQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
+            FenixAlliance.ACL.Configuration.Interfaces.ABM.IAllianceBusinessModelProvider Provider;
+
+            if (Options.ABM.Providers.Count() == 1)
+            {
+                Provider = Options.ABM.Providers.First();
+            }
+            else
+            {
+                Provider = Options.ABM.Providers.Last(c => c.ProviderEngine == ACL.Configuration.Enums.AllianceBusinessModelProviderEngine.MySQL && c.ProviderPurpose == ACL.Configuration.Enums.AllianceBusinessModelProviderPurpose.ABM_Data && c.Environment == ((!Development) ? "Production" : "Development")) 
+                    ?? Options.ABM.Providers.Last(c => c.ProviderEngine == ACL.Configuration.Enums.AllianceBusinessModelProviderEngine.MySQL && c.ProviderPurpose == ACL.Configuration.Enums.AllianceBusinessModelProviderPurpose.ABM_Data);
+            }
 
             // Use MySQL DB
             services.AddDbContextLocalFactory<ABMContext>(
@@ -92,8 +110,17 @@ namespace FenixAlliance.ABM.Hub.Extensions
 
         public static void AddMSSQL(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment Environment, ISuiteOptions Options, bool Development)
         {
-            var Provider = Options.ABM.Providers.Last(c => c.Name == "MSSQL" && c.Purpose == "ABM.Data" && c.Environment == ((!Development) ? "Production" : "Development"));
+            FenixAlliance.ACL.Configuration.Interfaces.ABM.IAllianceBusinessModelProvider Provider;
 
+            if (Options.ABM.Providers.Count() == 1)
+            {
+                Provider = Options.ABM.Providers.First();
+            }
+            else
+            {
+                Provider = Options.ABM.Providers.Last(c => c.ProviderEngine == ACL.Configuration.Enums.AllianceBusinessModelProviderEngine.MSSQL && c.ProviderPurpose == ACL.Configuration.Enums.AllianceBusinessModelProviderPurpose.ABM_Data && c.Environment == ((!Development) ? "Production" : "Development"))
+                    ?? Options.ABM.Providers.Last(c => c.ProviderEngine == ACL.Configuration.Enums.AllianceBusinessModelProviderEngine.MSSQL && c.ProviderPurpose == ACL.Configuration.Enums.AllianceBusinessModelProviderPurpose.ABM_Data);
+            }
             // Use MSSQL DB
             services.AddDbContextLocalFactory<ABMContext>(options =>
             {
