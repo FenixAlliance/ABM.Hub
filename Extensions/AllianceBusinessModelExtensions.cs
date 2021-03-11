@@ -1,9 +1,10 @@
 ﻿using FenixAlliance.ABM.Data;
 using FenixAlliance.ABM.Data.Access.Clients;
-using FenixAlliance.ABM.Data.Access.Context;
 using FenixAlliance.ABM.Data.Access.Helpers;
+using FenixAlliance.ABM.Data.Access.Services;
 using FenixAlliance.ABM.Data.Interfaces.Access;
 using FenixAlliance.ABM.Data.Interfaces.Helpers;
+using FenixAlliance.ABM.Data.Interfaces.Services;
 using FenixAlliance.ABM.Data.Interfaces.Storage;
 using FenixAlliance.ABM.Data.Seeding.Helpers;
 using FenixAlliance.ABM.Data.Seeding.Models;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
+using FenixAlliance.ABM.Data.Access.Services.Auth;
 
 namespace FenixAlliance.ABM.Hub.Extensions
 {
@@ -46,7 +48,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
             }
             try
             {
-                services.AddScoped<ABMContext>(p => p.GetRequiredService<IDbContextLocalFactory<ABMContext>>().CreateDbContext());
+                services.AddScoped<ABMContext>(p => p.GetRequiredService<IDbFactoryService<ABMContext>>().CreateDbContext());
             }
             catch (Exception e)
             {
@@ -54,30 +56,23 @@ namespace FenixAlliance.ABM.Hub.Extensions
                 throw;
             }
 
-
             if (Environment.IsDevelopment())
             {
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
-            services.AddTransient<IAccountUsersHelpers, HolderHelpers>();
-            services.AddTransient<IHolderDataAccess, HolderDataAccessClient>();
-
-            services.AddTransient<IBusinessDataAccess, TenantDataAccessClient>();
-            services.AddTransient<ITenantHelpers, TenantHelpers>();
-
-            services.AddTransient<ISocialDataAccess, SocialDataAccessClient>();
-            services.AddTransient<ISocialHelpers, SocialHelpers>();
-
-            //services.AddTransient<IStockDataAccess, StockDataAccessClient>();
-            //services.AddTransient<IStoreHelpers, StoreHelpers>();
-
-
-            services.AddTransient<IStorageDataAccess, StorageDataAccessClient>();
-            services.AddTransient<IBlobStorageDataAccessClient, BlobStorageDataAccessClient>();
-            services.AddTransient<IMongoHelpers, MongoHelpers>(); 
+            services.AddTransient<IHolderService, HolderService>(); 
+            services.AddTransient<IAuthService, AuthService>(); 
+            services.AddTransient<IDnsLookupService, DnsLookupService>(); 
+            services.AddTransient<IStorageService, StorageService>(); 
+            services.AddTransient<ITenantService, TenantService>(); 
+            services.AddTransient<ISmtpService, SmtpService>(); 
+            services.AddTransient<IMongoService, MongoService>(); 
+            services.AddTransient<IStockService, StockService>(); 
+            services.AddTransient<IStoreService, StoreService>(); 
+            services.AddTransient<ISocialService, SocialService>(); 
+            services.AddTransient<IWalletService, WalletService>(); 
             services.AddTransient<ISeedingHelpers, SeedingHelpers>(); 
-
         }
 
 
@@ -96,7 +91,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
             }
 
             // Use MySQL DB
-            services.AddDbContextLocalFactory<ABMContext>(
+            services.AddAllianceBusinessModelContextFactory<ABMContext>(
                 options =>
                 {
                     options.UseMySql(Provider.ConnectionString, ServerVersion.AutoDetect(Provider.ConnectionString),
@@ -122,7 +117,7 @@ namespace FenixAlliance.ABM.Hub.Extensions
                     ?? Options.ABM.Providers.Last(c => c.ProviderEngine == ACL.Configuration.Enums.AllianceBusinessModelProviderEngine.MSSQL && c.ProviderPurpose == ACL.Configuration.Enums.AllianceBusinessModelProviderPurpose.ABM_Data);
             }
             // Use MSSQL DB
-            services.AddDbContextLocalFactory<ABMContext>(options =>
+            services.AddAllianceBusinessModelContextFactory<ABMContext>(options =>
             {
                 options.UseSqlServer(Provider.ConnectionString,
                         optionsBuilder =>
